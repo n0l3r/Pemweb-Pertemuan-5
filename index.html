@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Mahasiswa</title>
+
+    <style>
+        body {
+            background-color: #303841;
+        }
+
+        *:focus {
+            outline: none;
+        }
+
+        .container {
+            width: 80%;
+            margin: 0 auto;
+        }
+
+        .card {
+            border-radius: 5px;
+            box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
+            margin: 1rem;
+            position: relative;
+            width: 100%;
+        }
+
+        .card-header {
+            padding: 1.5rem;
+            border-radius: 5px 5px 0 0;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        .form-search {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .form-control {
+            display: block;
+            width: 10%;
+            background-color: #3b4651;
+            border: 1px solid #424e5a;
+            border-radius: 5px;
+            color: #94a0ad;
+            font-size: 0.875rem;
+            font-weight: 400;
+            line-height: 1.5;
+            padding: 10px 15px;
+        }
+
+        .table {
+            width: 100%;
+            margin-bottom: 1rem;
+            color: #fff;
+            text-align: center;
+        }
+
+        .table> :not(caption)>*>* {
+            padding: 0.75rem;
+            vertical-align: top;
+            border-bottom: 1px solid #424e5a;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                <div class="form-search">
+                    <select name="p" id="p" class="form-control" onchange="getMahasiswaByProdi();">
+                        <option value="IF">IF</option>
+                        <option value="EL">EL</option>
+                        <option value="PWK">PWK</option>
+                    </select>
+                </div>
+            </div>
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">No</th>
+                            <th scope="col">NIM</th>
+                            <th scope="col">Nama</th>
+                            <th scope="col">Prodi</th> 
+                        </tr>
+                    </thead>
+                    <tbody id="data"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    $(document).ready(function() {
+        getMahasiswa();
+    });
+
+    const getMahasiswa = () => {
+        $.ajax({
+            url: 'api.php',
+            type: 'GET',
+            success: function(data) {
+                var data = JSON.parse(data);
+                var html = '';
+                var no = 1;
+                for (var i = 0; i < data.length; i++) {
+                    html += '<tr>';
+                    html += '<td>' + no++ + '</td>';
+                    html += '<td>' + data[i].nim + '</td>';
+                    html += '<td>' + data[i].nama + '</td>';
+                    html += '<td>' + data[i].prodi + '</td>';
+                    html += '</tr>';
+                }
+                $('#data').html(html);
+            }
+        });
+    }
+
+    const getMahasiswaByProdi = () => {
+        var prodi = $('#p').val();
+        $.ajax({
+            url: 'api.php',
+            type: 'GET',
+            data: {
+                p: prodi
+            },
+            success: function(data) {
+                var data = JSON.parse(data);
+                var html = '';
+                var no = 1;
+                for (var i = 0; i < data.length; i++) {
+                    html += '<tr>';
+                    html += '<td>' + no++ + '</td>';
+                    html += '<td>' + data[i].nim + '</td>';
+                    html += '<td>' + data[i].nama + '</td>';
+                    html += '<td>' + data[i].prodi + '</td>';
+                    html += '</tr>';
+                }
+                $('#data').html(html);
+            }
+        });
+    }
+</script>
+
+</html>
